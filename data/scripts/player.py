@@ -11,6 +11,7 @@ class Player:
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.clicked = False
         self.bullets = []
+        self.pressed_key = None
 
     def set_pos(self):
         self.rect.x = (self.x - self.width // 2)
@@ -23,24 +24,6 @@ class Player:
         self.y -= offset[1]
         self.set_pos()
 
-
     def display(self, display, mouse_pos):
         self.change_offset()
         pygame.draw.rect(display, self.color,self.rect)
-        # pygame.draw.circle(display, (255, 255, 0), (self.x, self.y), 1)
-
-        # if self.clicked:
-        #     # x = self.x - mouse_pos[0]
-        #     # y = self.y - mouse_pos[1]
-        #     # angle = math.atan2(y, x)
-        #     #
-        #     #
-        #     # angle = math.degrees(angle) + 180
-        #     # angle = math.radians(angle)
-        #     bullet = Bullet(self.x, self.y, mouse_pos)
-        #     self.bullets.append(bullet)
-        #     print(self.bullets)
-        #     self.clicked = False
-        #
-        # for bullet in self.bullets:
-        #     bullet.display(display)

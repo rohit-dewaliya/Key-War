@@ -2,7 +2,7 @@ import pygame
 
 color_key = (0, 0, 0)
 
-def load_image(path, alpha = 255):
+def load_image(path, alpha=255, color_key=(0, 0, 0)):
     path = "data/images/" + path
     image = pygame.image.load(path)
     image.set_colorkey(color_key)
@@ -18,7 +18,7 @@ def scale_image_ratio(image, ratio):
     image = pygame.transform.scale(image, (width * ratio, height * ratio))
     return image
 
-def swap_color(img, old_color, new_color):
+def swap_color(img, old_color, new_color, color_key = (0, 0, 0)):
     img.set_colorkey(old_color)
     surface = img.copy()
     surface.fill(new_color)

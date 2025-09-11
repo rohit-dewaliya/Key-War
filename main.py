@@ -34,6 +34,8 @@ class Game:
         self.grid = scale_image_size(load_image('background/grid.png', 100), *self.size)
         self.gradient = scale_image_size(load_image('background/gradient.png'), *self.size)
 
+        self.bullet = pygame.image.load('data/images/bullet.png').convert()
+        self.bullet.set_colorkey((0, 0, 0))
 
         # Fonts-----------------------------#
         self.score_fonts = Font('small_font.png', (255, 255, 255), 2)
@@ -67,7 +69,7 @@ class Game:
         self.enemy_manager = EnemyManager(self.size)
         self.background_pos = 0
 
-        self.bullet_manager = BulletManager(self.size)
+        self.bullet_manager = BulletManager(self.size, self.bullet)
 
     def main(self):
         while self._game:
@@ -83,23 +85,23 @@ class Game:
             if self.background_pos >= self.size[1]:
                 self.background_pos = 0
 
-            self.player.display(self.screen, mouse_pos)
-
-            self.enemy_manager.display_enemies(self.screen)
-
             self.bullet_manager.display(self.screen)
+            self.player.display(self.screen, mouse_pos)
+            self.enemy_manager.display_enemies(self.screen)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self._game = False
 
                 if event.type == pygame.KEYDOWN:
-                    print(f"Key code: {event.key}, Name: {pygame.key.name(event.key)}, Typed: '{event.unicode}'")
-
+                    self.player.pressed_key = event.unicode
+                    if self.enemy_manager.check_word_locked(self.player.pressed_key):
+                        self.bullet_manager.add_bullet(self.player.x, self.player.y, [self.enemy_manager.locked_enemy.x,
+                                                                                      self.enemy_manager.locked_enemy.y])
 
                 if event.type == MOUSEBUTTONDOWN:
                     if event.button == 1:
-                        self.bullet_manager.add_bullet(self.player.x, self.player.y, mouse_pos)
+                        pass
 
             pygame.display.update()
             self.clock.tick()

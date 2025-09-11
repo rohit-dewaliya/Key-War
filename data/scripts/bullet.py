@@ -3,12 +3,13 @@ import math
 
 
 class BulletManager:
-    def __init__(self, screen_size):
+    def __init__(self, screen_size, bullet):
         self.screen_size = screen_size
         self.bullets = []
+        self.bullet = bullet
 
     def add_bullet(self, x, y, mouse_pos):
-        bullet = Bullet(x, y, mouse_pos)
+        bullet = Bullet(x, y, mouse_pos, self.bullet)
         self.bullets.append(bullet)
 
     def display(self, display):
@@ -19,21 +20,26 @@ class BulletManager:
 
 
 class Bullet:
-    def __init__(self, x, y, mouse_pos):
+    def __init__(self, x, y, mouse_pos, bullet):
         self.x = x
         self.y = y
         self.angle = 0
-        self.speed = 15
+        self.speed = 30
+        self.bullet_anlge = 0
 
         self.get_angle(mouse_pos)
+
+        self.bullet = pygame.transform.rotate(bullet, 180 - self.bullet_anlge)
+        self.bullet_size = self.bullet.get_size()
 
     def get_angle(self, mouse_pos):
         x = self.x - mouse_pos[0]
         y = self.y - mouse_pos[1]
-        angle = math.atan2(y, x)
+        self.bullet_anlge = math.atan2(y, x)
 
-        angle = math.degrees(angle) + 180
-        self.angle = math.radians(angle)
+        self.bullet_anlge = math.degrees(self.bullet_anlge) + 180
+
+        self.angle = math.radians(self.bullet_anlge)
 
     def find_coordinates(self):
         y = self.speed * math.sin(self.angle)
@@ -46,5 +52,5 @@ class Bullet:
         self.y += coors[1]
 
     def display(self, display):
-        pygame.draw.circle(display, (255,255,255), (self.x, self.y), 5)
+        display.blit(self.bullet, (self.x - self.bullet_size[0] // 2, self.y - self.bullet_size[1] // 2))
         self.new_coordinates()
