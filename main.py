@@ -96,8 +96,7 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     self.player.pressed_key = event.unicode
                     if self.enemy_manager.check_word_locked(self.player.pressed_key):
-                        self.bullet_manager.add_bullet(self.player.x, self.player.y, [self.enemy_manager.locked_enemy.x,
-                                                                                      self.enemy_manager.locked_enemy.y])
+                        self.bullet_manager.add_bullet(self.player.x, self.player.y, self.enemy_manager.locked_enemy)
 
                 if event.type == MOUSEBUTTONDOWN:
                     if event.button == 1:

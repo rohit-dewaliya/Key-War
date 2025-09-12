@@ -9,7 +9,7 @@ class Enemy:
     def __init__(self, screen_size, word = ""):
         self.x = 0
         self.y = 0
-        self.speed = 2
+        self.speed = 1
         self.size = [10, 15]
         self.screen_size = screen_size
         self.word = word
