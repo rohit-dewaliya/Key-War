@@ -23,11 +23,15 @@ Defeat enemies by typing words before they reach you, track your **Words Per Min
 [---
 
 ## 📷 Screenshots
-![](data\screenshots\1.png)
-
-![](data\screenshots\2.png)
-
-![](data\screenshots\3.png)
+<div align="center">
+<table>
+  <tr>
+    <td><img width="250" alt="1" src="https://github.com/user-attachments/assets/1f0895bb-170b-4e9b-b23a-8f9b9fa96952" /></td>
+    <td><img width="250" alt="2" src="https://github.com/user-attachments/assets/d61abd52-5af6-4dd2-8302-f328521ae775" /></td>
+    <td><img width="250" alt="3" src="https://github.com/user-attachments/assets/602e8ee1-ad7d-47f8-bc2f-0631201c348d" /></td>
+  </tr>
+</table>
+</div>
 
 ---
 
