@@ -1,4 +1,5 @@
 import pygame
+import math
 
 from data.scripts.image_functions import load_image, swap_color, scale_image_ratio, clip_surface
 
@@ -45,37 +46,51 @@ class Font():
 
         return width
 
-    def display_fonts(self, surface, string, pos, text_spacing = 3):
+    def display_fonts(self, surface, string, pos, text_spacing = 3, alpha = 255):
         for character in string:
             if character == ' ':
                 pos[0] += 5 * self.size_ratio
             else:
-                surface.blit(self.image_character_dict[character][0], pos)
+                char_img = self.image_character_dict[character][0].copy()
+                char_img.set_alpha(alpha)
+                surface.blit(char_img, pos)
                 pos[0] += self.image_character_dict[character][1] + text_spacing
 
-    # def display_masked_fonts(self, surface, string, pos, text_spacing=3):
-    #     for character in string:
-    #         if character == ' ':
-    #             pos[0] += 5 * self.size_ratio
-    #             continue
-    #
-    #         char_img = self.image_character_dict[character][0]
-    #         char_width = self.image_character_dict[character][1]
-    #
-    #         # Create mask for character
-    #         mask = pygame.mask.from_surface(char_img)
-    #         outline = mask.outline()
-    #
-    #         # Create black border surface
-    #         border_surface = pygame.Surface(char_img.get_size(), pygame.SRCALPHA)
-    #         for x, y in outline:
-    #             border_surface.set_at((x, y), (0, 0, 0, 255))
-    #
-    #         # Blit border first
-    #         surface.blit(border_surface, pos)
-    #         # Blit actual character on top
-    #         surface.blit(char_img, pos)
-    #
-    #         pos[0] += char_width + text_spacing
+    def display_fonts_with_border(self, surface, string, pos, text_spacing=3, border_color=(0, 0, 0), border_size=1,
+                                  alpha = 255):
+        base_x, base_y = pos[0], pos[1]
 
+        for dx in range(-border_size, border_size + 1):
+            for dy in range(-border_size, border_size + 1):
+                if dx == 0 and dy == 0:
+                    continue
+                offset_pos = [base_x + dx, base_y + dy]
+                self._draw_string(surface, string, offset_pos, text_spacing, color_override=border_color)
 
+        # Draw main text on top
+        self.display_fonts(surface, string, [base_x, base_y], text_spacing, alpha)
+
+    def _draw_string(self, surface, string, pos, text_spacing, color_override=None):
+        for character in string:
+            if character == ' ':
+                pos[0] += 5 * self.size_ratio
+            else:
+                char_img = self.image_character_dict[character][0]
+                if color_override:
+                    char_img = char_img.copy()
+                    char_img.fill(color_override + (255,), special_flags=pygame.BLEND_RGBA_MIN)
+
+                surface.blit(char_img, pos)
+                pos[0] += self.image_character_dict[character][1] + text_spacing
+
+    @staticmethod
+    def render_water_text(font_surface, time, amplitude=5, wavelength=50, speed=10):
+        w, h = font_surface.get_size()
+        distorted = pygame.Surface((w, h), pygame.SRCALPHA)
+
+        for y in range(h):
+            offset_x = int(math.sin((y / wavelength) + time * speed) * amplitude)
+            row = font_surface.subsurface((0, y, w, 1))
+            distorted.blit(row, (offset_x, y))
+
+        return distorted
